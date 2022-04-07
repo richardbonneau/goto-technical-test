@@ -33,13 +33,11 @@ function Main() {
 
   const [searchText, setSearchText] = useState<string>("");
   const [searchSuggestions, setSearchSuggestions] = useState<Array<string>>([]);
-  console.log("~ searchSuggestions", searchSuggestions);
-
-  
 
   const onTypeInSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newlyTypedText:string = e.target.value;
     setSearchText(newlyTypedText);
+    
     if(newlyTypedText.length > 0) {
       const newListOfSuggestions:Array<string> = allTickers.filter(ticker=>{
         return ticker.toLowerCase().includes(newlyTypedText.toLowerCase());
