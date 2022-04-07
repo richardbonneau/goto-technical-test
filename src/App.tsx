@@ -1,20 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import styled from 'styled-components';
 import Main from "./pages/Main";
 import Stock from "./pages/Stock";
-import { generateMockData, StockList, getGeneratedData } from "./utils/mockDataGenerator";
-
+import { generateMockData } from "./utils/mockDataGenerator";
+import { useDispatch } from 'react-redux';
+import { getData } from './index';
 
 function App() {
-
-  const [allTickers, setAllTickers] = useState<Array<string>>([]);
-  const [stocks, setStocks] = useState<StockList>({});
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const mockData = generateMockData();
-    setAllTickers(mockData.allTickers);
-    setStocks(mockData.stocks);
+    dispatch(getData(mockData.stocks, mockData.allTickers));
   }, []);
 
   return (

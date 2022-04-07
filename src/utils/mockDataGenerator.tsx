@@ -22,7 +22,7 @@ export const generateMockData = (): MockData => {
     let stocks: StockList = {};
     let allTickers: Array<string> = [];
 
-    [...new Array(20)].forEach((_, i) => {
+    [...new Array(50)].forEach((_, i) => {
         const newTicker: string = tickerGenerator(allTickers);
         allTickers = allTickers.concat(newTicker);
         stocks[newTicker] = [];
@@ -30,8 +30,8 @@ export const generateMockData = (): MockData => {
     });
 
     // Stocks prices and Social Media counts over 24h
-    const yesterday: number = Date.now() - 24 * 60 * 60;
-    [...new Array(24)].forEach((_, i) => {
+    const tenDaysAgo: number = Date.now() - 10 * 86400000;
+    [...new Array(10)].forEach((_, i) => {
         allTickers.forEach(ticker => {
             const isMarketGoingUp: boolean = numberRandomizer(0, 1) === 0 ? true : false;
             const isSocialMediaGoingUp: boolean = numberRandomizer(0, 1) === 0 ? true : false;
@@ -53,7 +53,7 @@ export const generateMockData = (): MockData => {
 
             const newDataEntry: Stock = {
                 ticker: ticker,
-                timestamp: yesterday + i * 60 * 60,
+                timestamp: tenDaysAgo + i * 86400000,
                 price: price,
                 socialMediaCount: socialMediaCount
             };
@@ -87,8 +87,4 @@ const tickerGenerator = (stocksGeneratedSoFar: Array<string>): string => {
     }
 
     return generatedTicker;
-}
-
-export const getGeneratedData=()=>{
-    return globalMockData;
 }
