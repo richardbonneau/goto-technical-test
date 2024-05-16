@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import styled from 'styled-components';
 import { useSelector, TypedUseSelectorHook } from 'react-redux';
-import { RootState } from '../index';
+import { RootState } from '../redux/store';
+import { colors } from '../utils/constants';
 export const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 const Container = styled.div`
@@ -10,22 +11,47 @@ const Container = styled.div`
 `
 
 const Sidebar = styled.div`
-  width: 200px;
+  width: 8rem;
   height: 100%;
-  background: #d9d9d9;
+  background: ${colors.grey};
   padding-left: 10px;
+
+  a {
+    color: ${colors.lightblue};
+
+    &:hover {
+      color: ${colors.white};
+    }
+  }
 `
 
 const Body = styled.div`
   width: 100%;
-  text-align: center;
   padding-top: 25px;
+  background: ${colors.dark};
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  align-items: center;
+}
 `
 
-const SearchSuggestionContainer = styled.ul`
-`
+const StyledInput = styled.input`
+  margin-top: 0.3rem;
+  padding: 0.3rem;
+  border: none;
+  color: ${colors.dark};
+  background-color: ${colors.light};
+
+  &:focus {
+    border-color: ${colors.white};
+    border: 1px solid ${colors.lightblue};
+    outline: none;
+  }
+`;
+
 const SearchSuggestion = styled.li`
-
+list-style-type: none;
 `
 
 function Main() {
@@ -34,45 +60,44 @@ function Main() {
   const [searchText, setSearchText] = useState<string>("");
   const [searchSuggestions, setSearchSuggestions] = useState<Array<string>>([]);
 
-  const onTypeInSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newlyTypedText:string = e.target.value;
+  const onTypeInSearchInput = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const newlyTypedText: string = e.target.value;
     setSearchText(newlyTypedText);
-    
-    if(newlyTypedText.length > 0) {
-      const newListOfSuggestions:Array<string> = allTickers.filter(ticker=>{
+
+    if (newlyTypedText.length > 0) {
+      const newListOfSuggestions: Array<string> = allTickers.filter(ticker => {
         return ticker.toLowerCase().includes(newlyTypedText.toLowerCase());
       });
       setSearchSuggestions(newListOfSuggestions);
     } else setSearchSuggestions([]);
-
-  }
+  }, [allTickers]);
 
   return (<>
     <Container>
       <Sidebar>
-        {allTickers.map(ticker => {
-          return <Link to={`/stock/${ticker}`}>
+        {allTickers.map((ticker, index) => {
+          return <Link key={index} to={`/stock/${ticker}`}>
             <h5>{ticker}</h5>
           </Link>
         })}
       </Sidebar>
       <Body>
-        <label>
+        <label htmlFor="stockSearch">
           Stock Search
-          <input value={searchText} onChange={onTypeInSearchInput} />
-          <SearchSuggestionContainer>
-            {searchSuggestions.map(ticker => {
-              return <Link to={`/stock/${ticker}`}>
-                <SearchSuggestion>
-                  {ticker}
-                </SearchSuggestion>
-              </Link>
-            })}
-          </SearchSuggestionContainer>
         </label>
+        <StyledInput id="stockSearch" value={searchText} onChange={onTypeInSearchInput} />
+        <ul>
+          {searchSuggestions.map((ticker, index) => {
+            return <Link key={index} to={`/stock/${ticker}`}>
+              <SearchSuggestion>
+                {ticker}
+              </SearchSuggestion>
+            </Link>
+          })}
+        </ul>
+
       </Body>
     </Container>
-
   </>
   );
 }

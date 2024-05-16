@@ -14,8 +14,7 @@ export interface MockData {
     allTickers: Array<string>
 }
 
-// Usually I would have used Redux here but because of a lack of time I am taking this shortcut to have access to the data anywhere
-let globalMockData:MockData;
+let globalMockData: MockData;
 
 export const generateMockData = (): MockData => {
     // Generate a list of stock tickers
@@ -33,8 +32,9 @@ export const generateMockData = (): MockData => {
     const tenDaysAgo: number = Date.now() - 10 * 86400000;
     [...new Array(10)].forEach((_, i) => {
         allTickers.forEach(ticker => {
-            const isMarketGoingUp: boolean = numberRandomizer(0, 1) === 0 ? true : false;
-            const isSocialMediaGoingUp: boolean = numberRandomizer(0, 1) === 0 ? true : false;
+            // Reuse the numberRandomizer as a coinflip because... why not?
+            const isMarketGoingUp: boolean = numberRandomizer(0, 1) === 0;
+            const isSocialMediaGoingUp: boolean = numberRandomizer(0, 1) === 0;
 
             let price: number;
             let socialMediaCount: number;
