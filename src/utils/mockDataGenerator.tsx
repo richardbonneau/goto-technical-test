@@ -1,3 +1,5 @@
+import { dayInMs } from "./constants";
+
 export interface Stock {
     ticker: string,
     timestamp: number,
@@ -29,7 +31,7 @@ export const generateMockData = (): MockData => {
     });
 
     // Stocks prices and Social Media counts over 24h
-    const tenDaysAgo: number = Date.now() - 10 * 86400000;
+    const tenDaysAgo: number = Date.now() - 10 * dayInMs;
     [...new Array(10)].forEach((_, i) => {
         allTickers.forEach(ticker => {
             // Reuse the numberRandomizer as a coinflip because... why not?
@@ -44,16 +46,18 @@ export const generateMockData = (): MockData => {
                 socialMediaCount = numberRandomizer(1000, 100000);
             }
             else {
-                const lastHourPrice: number = stocks[ticker][i - 1].price;
-                price = isMarketGoingUp ? numberRandomizer(lastHourPrice, lastHourPrice + lastHourPrice * 0.1) : numberRandomizer(lastHourPrice, lastHourPrice - lastHourPrice * 0.1);
+                const lastDayPrice: number = stocks[ticker][i - 1].price;
+                const priceIncrement: number = lastDayPrice * 0.1;
+                price = isMarketGoingUp ? numberRandomizer(lastDayPrice, lastDayPrice + priceIncrement) : numberRandomizer(lastDayPrice, lastDayPrice - priceIncrement);
 
-                const lastHourSocialMediaCount: number = stocks[ticker][i - 1].socialMediaCount;
-                socialMediaCount = isSocialMediaGoingUp ? numberRandomizer(lastHourSocialMediaCount, lastHourSocialMediaCount + lastHourSocialMediaCount * 0.1) : numberRandomizer(lastHourSocialMediaCount, lastHourSocialMediaCount - lastHourSocialMediaCount * 0.1);
+                const lastDaySocialMediaCount: number = stocks[ticker][i - 1].socialMediaCount;
+                const socialMediaCountIncrement: number = lastDaySocialMediaCount * 0.1;
+                socialMediaCount = isSocialMediaGoingUp ? numberRandomizer(lastDaySocialMediaCount, lastDaySocialMediaCount + socialMediaCountIncrement) : numberRandomizer(lastDaySocialMediaCount, lastDaySocialMediaCount - socialMediaCountIncrement);
             }
 
             const newDataEntry: Stock = {
                 ticker: ticker,
-                timestamp: tenDaysAgo + i * 86400000,
+                timestamp: tenDaysAgo + i * dayInMs,
                 price: price,
                 socialMediaCount: socialMediaCount
             };

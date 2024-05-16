@@ -39,11 +39,12 @@ function Main() {
   const navigate = useNavigate();
   const params = useParams();
   const stocks = useTypedSelector(state => state.stocks);
+  const stockData = params.ticker && stocks[params.ticker];
   const [recommendations, setRecommendations] = useState<string[]>([]);
 
   useEffect(() => {
-    if (params.ticker && stocks[params.ticker]) {
-      const newRecommendations = stocks[params.ticker].map((data: Stock, index: number) => {
+    if (stockData) {
+      const newRecommendations = stockData.map((data: Stock, index: number) => {
 
         // Hold because we don't have enough data to make a decision yet ¯\_(ツ)_/¯
         if (index === 0) return "hold";
@@ -80,7 +81,7 @@ function Main() {
           <th>Social Media Count</th>
           <th>Recommendation</th>
         </tr>
-        {params.ticker && stocks[params.ticker].map((data, i) => {
+        {stockData && stockData.map((data, i) => {
           return <tr key={i}>
             <td>{format(data.timestamp, "PP")}</td>
             <td>{data.price}</td>
