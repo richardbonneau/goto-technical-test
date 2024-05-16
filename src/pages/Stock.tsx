@@ -23,20 +23,17 @@ const BackButton = styled.h2`
   text-align: left;
   width: 100%;
   cursor: pointer;
-
   color: ${colors.lightblue};
 
   &:hover {
     color: ${colors.white};
   }
-
 `;
 
 const TickerTitle = styled.h1`
   text-align: center;
   width: 100%;
 `;
-
 
 function Main() {
   const navigate = useNavigate();
