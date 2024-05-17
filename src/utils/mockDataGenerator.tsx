@@ -34,9 +34,8 @@ export const generateMockData = (): MockData => {
     const tenDaysAgo: number = Date.now() - 10 * dayInMs;
     [...new Array(10)].forEach((_, i) => {
         allTickers.forEach(ticker => {
-            // Reuse the numberRandomizer as a coinflip because... why not?
-            const isMarketGoingUp: boolean = numberRandomizer(0, 1) === 0;
-            const isSocialMediaGoingUp: boolean = numberRandomizer(0, 1) === 0;
+            const isMarketGoingUp: boolean = coinflip();
+            const isSocialMediaGoingUp: boolean = coinflip();
 
             let price: number;
             let socialMediaCount: number;
@@ -72,6 +71,10 @@ export const generateMockData = (): MockData => {
 const numberRandomizer = (lowest: number, highest: number): number => {
     const randomNumber = Math.random() * (highest - lowest);
     return Math.round(randomNumber + lowest);
+}
+
+const coinflip = (): boolean => {
+    return Math.round(Math.random()) === 0;
 }
 
 const tickerGenerator = (stocksGeneratedSoFar: Array<string>): string => {

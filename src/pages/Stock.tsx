@@ -4,10 +4,10 @@ import styled from 'styled-components';
 import { Stock } from "../utils/mockDataGenerator";
 import { useSelector, TypedUseSelectorHook } from 'react-redux';
 import { RootState } from '../redux/store';
-import { format } from 'date-fns'
 import { useNavigate } from 'react-router-dom';
 import { colors } from '../utils/constants';
 import { medianCalculator } from '../utils/medianCalculator';
+import StockRow from '../components/StockRow';
 export const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 const Container = styled.div`
@@ -82,12 +82,12 @@ function Main() {
           <th>Recommendation</th>
         </tr>
         {stockData && stockData.map((data, i) => {
-          return <tr key={i}>
-            <td>{format(data.timestamp, "PP")}</td>
-            <td>{data.price}</td>
-            <td>{data.socialMediaCount}</td>
-            <td>{recommendations[i]}</td>
-          </tr>
+          return <StockRow key={i} 
+          timestamp={data.timestamp} 
+          price={data.price}
+          previousPrice={i > 0 ? stockData[i - 1].price : data.price}
+          socialMediaCount={data.socialMediaCount} 
+          recommendation={recommendations[i]} />
         })}
       </table>
     </Container>
